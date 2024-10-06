@@ -1,6 +1,11 @@
 pipeline {
     agent any
     stages {
+        stage('Checkout Code'){
+            steps {
+                checkout scm
+            }
+        }
         stage('Install Dependencies') {
             steps {
                 bat 'pip install -r requirements.txt'
@@ -20,6 +25,18 @@ pipeline {
         stage('Code Quality Check') {
             steps {
                 bat 'flake8 app.py'
+            }
+        }
+        stage('Deploy to AWS') {
+            steps {
+                withCredentials([string(credentialsId: 'aws-access-key-id', variable: 'AWS_ACCESS_KEY_ID'), 
+                                 string(credentialsId: 'aws-secret-access-key', variable: 'AWS_SECRET_ACCESS_KEY')]) {
+                    // Initialize Elastic Beanstalk environment
+                    bat 'eb init -p python-3.7 flask-app --region us-east-1'
+
+                    // Create or update Elastic Beanstalk environment
+                    bat 'eb create my-env || eb deploy'
+                }
             }
         }
     }
