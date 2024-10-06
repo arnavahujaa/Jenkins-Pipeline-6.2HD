@@ -6,19 +6,20 @@ pipeline {
                 bat 'pip install -r requirements.txt'
             }
         }
+        stage('Build') {
+            steps {
+                // Running your build command; adjust as necessary
+                bat 'python setup.py build'
+            }
+        }
         stage('Run Tests') {
             steps {
                 bat 'pytest test_calculator.py'
             }
         }
-        stage('Lint Code') {
+        stage('Code Quality Check') {
             steps {
                 bat 'flake8 app.py'
-            }
-        }
-        stage('Deploy') {
-            steps {
-                bat 'flask run --host=0.0.0.0'
             }
         }
     }
