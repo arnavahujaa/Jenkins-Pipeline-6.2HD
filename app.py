@@ -43,8 +43,8 @@ def divide():
 def sqrt():
     data = request.get_json()
     if data['a'] < 0:
-        return jsonify(error="Cannot take the square root of a negative number."),
-        400
+        return jsonify(error="Cannot take the square root of \
+        a negative number."), 400
     result = math.sqrt(data['a'])
     return jsonify(result=result)
 
